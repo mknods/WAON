@@ -286,11 +286,6 @@ static int APP_STATE = APP_STATE_RUN;
     scroll_view.delegate = self;
     
     [self.view addSubview:scroll_view];
-    
-    UIImage *img_white = [UIImage imageNamed:@"white_key.png"];
-    UIImage *img_white_bg = [UIImage imageNamed:@"white_key.png"];
-    UIImage *img_black = [UIImage imageNamed:@"black_key.png"];
-    UIImage *img_black_bg = [UIImage imageNamed:@"black_key.png"];
 
     for(int i=0; i<KEY_NUM; i++){
   
