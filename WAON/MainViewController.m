@@ -103,7 +103,6 @@ Exit:
 
 @implementation MainViewController
 
-@synthesize popOver = _popOver;
 
 ALCcontext* alContext;
 ALCdevice*  device;
@@ -239,20 +238,19 @@ static int APP_STATE = APP_STATE_RUN;
 
 - (void)viewDidLoad
 {
-    
-    UISwipeGestureRecognizer* swipe_r = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selSwipeGesture:)];
-    UISwipeGestureRecognizer* swipe_l = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selSwipeGesture:)];
-    UISwipeGestureRecognizer* swipe_up = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selSwipeGesture:)];
-    UISwipeGestureRecognizer* swipe_down = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selSwipeGesture:)];
-    swipe_r.direction = UISwipeGestureRecognizerDirectionRight;
-    swipe_l.direction = UISwipeGestureRecognizerDirectionLeft;
-    swipe_up.direction = UISwipeGestureRecognizerDirectionUp;
-    swipe_down.direction = UISwipeGestureRecognizerDirectionDown;
-
-    [self.view addGestureRecognizer:swipe_r];
-    [self.view addGestureRecognizer:swipe_l];
-    [self.view addGestureRecognizer:swipe_up];
-    [self.view addGestureRecognizer:swipe_down];
+//    UISwipeGestureRecognizer* swipe_r = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selSwipeGesture:)];
+//    UISwipeGestureRecognizer* swipe_l = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selSwipeGesture:)];
+//    UISwipeGestureRecognizer* swipe_up = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selSwipeGesture:)];
+//    UISwipeGestureRecognizer* swipe_down = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selSwipeGesture:)];
+//    swipe_r.direction = UISwipeGestureRecognizerDirectionRight;
+//    swipe_l.direction = UISwipeGestureRecognizerDirectionLeft;
+//    swipe_up.direction = UISwipeGestureRecognizerDirectionUp;
+//    swipe_down.direction = UISwipeGestureRecognizerDirectionDown;
+//
+//    [self.view addGestureRecognizer:swipe_r];
+//    [self.view addGestureRecognizer:swipe_l];
+//    [self.view addGestureRecognizer:swipe_up];
+//    [self.view addGestureRecognizer:swipe_down];
     
     int screenW = [[UIScreen mainScreen] applicationFrame].size.width;
     int screenH = [[UIScreen mainScreen] applicationFrame].size.height;
@@ -262,19 +260,15 @@ static int APP_STATE = APP_STATE_RUN;
     int blk_w = 104/2;//55;
     int blk_h = 260;
 
-    int slide_space=20;
-
     //文字色
     UIColor* text_color = [UIColor colorWithRed:206/255.f green:200/255.f blue:188/255.f alpha:1.f];
-    UIColor* shadow_color = [UIColor colorWithRed:199/255.f green:166/255.f blue:144/255.f alpha:.9f];
-
-    
-    self.view.backgroundColor = [UIColor colorWithRed:0.18f green:0.18f blue:0.18f alpha:1.f];
+    self.view.backgroundColor = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.f];
 
     /* key */
-    CGRect rect = CGRectMake(0, screenW/2-40-slide_space, screenH, screenW/2+slide_space+40);
+    CGRect rect = CGRectMake(0, 336, 1024,screenW-300 );
     UIScrollView *scroll_view = [[UIScrollView alloc] initWithFrame:rect];
     scroll_view.scrollEnabled = YES;
+    scroll_view.canCancelContentTouches = NO;
     scroll_view.delaysContentTouches=NO;    // << touch遅延原因
     scroll_view.alwaysBounceHorizontal = TRUE;
     scroll_view.bounces = YES;
@@ -282,13 +276,13 @@ static int APP_STATE = APP_STATE_RUN;
     scroll_view.pagingEnabled=NO;
     scroll_view.indicatorStyle=UIScrollViewIndicatorStyleWhite;
     scroll_view.contentSize = CGSizeMake(white_w*7*3, 0);
-    scroll_view.backgroundColor=[UIColor colorWithRed:0 green:0 blue:0 alpha:1];
+    scroll_view.backgroundColor=[UIColor colorWithRed:0.05 green:0.05 blue:0.05 alpha:1];
     scroll_view.delegate = self;
     
     [self.view addSubview:scroll_view];
 
     for(int i=0; i<KEY_NUM; i++){
-  
+
         btn_key[i] = [UIButton buttonWithType:UIButtonTypeCustom];
         [btn_key[i] addTarget:self action:@selector(playSound:) forControlEvents:UIControlEventTouchDown];
         [btn_key[i] addTarget:self action:@selector(stopSound:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
@@ -300,7 +294,7 @@ static int APP_STATE = APP_STATE_RUN;
     
     int pos = 0;
     int offset =0;
-    int top_pos = 14;
+    int top_pos = 0;
     
     for(int j=0; j<KEY_NUM/12; j++){
 
@@ -319,18 +313,18 @@ static int APP_STATE = APP_STATE_RUN;
         [btn_key[pos+11] setBackgroundImage:[UIImage imageNamed:@"key_h"] forState:UIControlStateNormal];
         
         // ON
-        [btn_key[pos+0] setImage:[UIImage imageNamed:@"key_c_on"] forState:UIControlStateHighlighted];
-        [btn_key[pos+1] setImage:[UIImage imageNamed:@"key_cis_on"] forState:UIControlStateHighlighted];
-        [btn_key[pos+2] setImage:[UIImage imageNamed:@"key_d_on"] forState:UIControlStateHighlighted];
-        [btn_key[pos+3] setImage:[UIImage imageNamed:@"key_dis_on"] forState:UIControlStateHighlighted];
-        [btn_key[pos+4] setImage:[UIImage imageNamed:@"key_e_on"] forState:UIControlStateHighlighted];
-        [btn_key[pos+5] setImage:[UIImage imageNamed:@"key_f_on"] forState:UIControlStateHighlighted];
-        [btn_key[pos+6] setImage:[UIImage imageNamed:@"key_fis_on"] forState:UIControlStateHighlighted];
-        [btn_key[pos+7] setImage:[UIImage imageNamed:@"key_g_on"] forState:UIControlStateHighlighted];
-        [btn_key[pos+8] setImage:[UIImage imageNamed:@"key_gis_on"] forState:UIControlStateHighlighted];
-        [btn_key[pos+9] setImage:[UIImage imageNamed:@"key_a_on"] forState:UIControlStateHighlighted];
-        [btn_key[pos+10] setImage:[UIImage imageNamed:@"key_b_on"] forState:UIControlStateHighlighted];
-        [btn_key[pos+11] setImage:[UIImage imageNamed:@"key_h_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+0] setBackgroundImage:[UIImage imageNamed:@"key_c_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+1] setBackgroundImage:[UIImage imageNamed:@"key_cis_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+2] setBackgroundImage:[UIImage imageNamed:@"key_d_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+3] setBackgroundImage:[UIImage imageNamed:@"key_dis_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+4] setBackgroundImage:[UIImage imageNamed:@"key_e_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+5] setBackgroundImage:[UIImage imageNamed:@"key_f_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+6] setBackgroundImage:[UIImage imageNamed:@"key_fis_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+7] setBackgroundImage:[UIImage imageNamed:@"key_g_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+8] setBackgroundImage:[UIImage imageNamed:@"key_gis_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+9] setBackgroundImage:[UIImage imageNamed:@"key_a_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+10] setBackgroundImage:[UIImage imageNamed:@"key_b_on"] forState:UIControlStateHighlighted];
+        [btn_key[pos+11] setBackgroundImage:[UIImage imageNamed:@"key_h_on"] forState:UIControlStateHighlighted];
 
         [btn_key[pos+0] setFrame:CGRectMake( offset + white_w * 0,      top_pos, white_w, white_h)];
         [btn_key[pos+1] setFrame:CGRectMake( offset + white_w * 0 + 57, top_pos, blk_w, blk_h)];
@@ -378,9 +372,8 @@ static int APP_STATE = APP_STATE_RUN;
     for(int i=0;i<3;i++){
         
         btn_selected[i] = NO;
-        btn_pitch[i] = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        btn_pitch[i] = [UIButton buttonWithType:UIButtonTypeCustom];
 
-        //btn_pitch[i].highlighted = btn_selected[i];
         [btn_pitch[i] addTarget:self action:@selector(buttonPush:) forControlEvents:UIControlEventTouchUpInside];
         btn_pitch[i].tag=i;
         
@@ -397,14 +390,6 @@ static int APP_STATE = APP_STATE_RUN;
     [btn_pitch[0] setBackgroundImage:[UIImage imageNamed:@"bt_active"] forState:UIControlStateHighlighted];
     [btn_pitch[1] setBackgroundImage:[UIImage imageNamed:@"bt_active"] forState:UIControlStateHighlighted];
     [btn_pitch[2] setBackgroundImage:[UIImage imageNamed:@"bt_active"] forState:UIControlStateHighlighted];
-
-//    [btn_pitch[0] setImage:[UIImage imageNamed:@"bt_on"] forState:UIControlStateNormal];
-//    [btn_pitch[1] setImage:[UIImage imageNamed:@"bt_off"] forState:UIControlStateNormal];
-//    [btn_pitch[2] setImage:[UIImage imageNamed:@"bt_off"] forState:UIControlStateNormal];
-//    [btn_pitch[0] setImage:[UIImage imageNamed:@"bt_active"] forState:(UIControlStateHighlighted)];
-//    [btn_pitch[1] setImage:[UIImage imageNamed:@"bt_active"] forState: UIControlStateHighlighted)];
-//    [btn_pitch[2] setImage:[UIImage imageNamed:@"bt_active"] forState:( UIControlStateHighlighted)];
-    
     
     // 442Hz
     lbl_hz = [[UIShadowLabel alloc]initWithFrame:CGRectMake(383,47,90,32)];
@@ -415,13 +400,13 @@ static int APP_STATE = APP_STATE_RUN;
     lbl_hz.backgroundColor=[UIColor colorWithRed:1.f green:1.f blue:1.f alpha:0.0f];
     [self.view addSubview:lbl_hz];
     
-    btn_hz_up = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    btn_hz_up = [UIButton buttonWithType:UIButtonTypeCustom];
     btn_hz_up.frame = CGRectMake( 484, 36,45,25);
     [btn_hz_up addTarget:self action:@selector(hz_up:) forControlEvents:UIControlEventTouchDown];
     [btn_hz_up setBackgroundImage:[UIImage imageNamed:@"bt_plus_off"] forState:UIControlStateNormal];
     [self.view addSubview:btn_hz_up];
     
-    btn_hz_down = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    btn_hz_down = [UIButton buttonWithType:UIButtonTypeCustom];
     btn_hz_down.frame = CGRectMake( 484, 66,45,25);
     [btn_hz_down addTarget:self action:@selector(hz_down:) forControlEvents:UIControlEventTouchDown];
     [btn_hz_down setBackgroundImage:[UIImage imageNamed:@"bt_minus_off"] forState:UIControlStateNormal];
@@ -457,7 +442,8 @@ static int APP_STATE = APP_STATE_RUN;
 
         
         // PITCH UP
-        btn_up[i] = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        
+        btn_up[i] = [UIButton buttonWithType:UIButtonTypeCustom];
         btn_up[i].frame = CGRectMake(offset+i*49,160,45,25);
         [btn_up[i] addTarget:self action:@selector(pitch_up:) forControlEvents:UIControlEventTouchDown];
         btn_up[i].tag=i;
@@ -496,7 +482,7 @@ static int APP_STATE = APP_STATE_RUN;
         
         
         // PITCH DOWN
-        btn_down[i] = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        btn_down[i] = [UIButton buttonWithType:UIButtonTypeCustom];
         btn_down[i].frame = CGRectMake(offset+i*49,270,45,25);
         [btn_down[i] addTarget:self action:@selector(pitch_down:) forControlEvents:UIControlEventTouchDown];
         btn_down[i].tag=i;
@@ -545,15 +531,15 @@ static int APP_STATE = APP_STATE_RUN;
     gesture_tempo_up = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(long_press_tempo:)];
     gesture_tempo_down = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(long_press_tempo:)];
     
-    btn_tempo[TEMPO_UP] = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    btn_tempo[TEMPO_UP] = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn_tempo[TEMPO_UP] addTarget:self action:@selector(tempo_up_cb:) forControlEvents:UIControlEventTouchDown];
     [btn_tempo[TEMPO_UP] addGestureRecognizer:gesture_tempo_up];
     
-    btn_tempo[TEMPO_DOWN] = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    btn_tempo[TEMPO_DOWN] = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn_tempo[TEMPO_DOWN] addTarget:self action:@selector(tempo_down_cb:) forControlEvents:UIControlEventTouchDown];
     [btn_tempo[TEMPO_DOWN] addGestureRecognizer:gesture_tempo_down];
     
-    btn_tempo[TEMPO_START] = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    btn_tempo[TEMPO_START] = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn_tempo[TEMPO_START] addTarget:self action:@selector(tempo_start:) forControlEvents:UIControlEventTouchDown];
     
     btn_tempo[TEMPO_START].frame = CGRectMake(area_offset-58,  20, 54, 61);
@@ -608,11 +594,11 @@ static int APP_STATE = APP_STATE_RUN;
     
     
     //MENU
-    btn_menu[0] = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    btn_menu[0] = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn_menu[0] addTarget:self action:@selector(show_info) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
     btn_menu[0].frame    = CGRectMake(screenH-70, 22, 51, 55);
 
-    btn_menu[1] = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    btn_menu[1] = [UIButton buttonWithType:UIButtonTypeCustom];
     [btn_menu[1] addTarget:self action:@selector(show_help) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside];
     btn_menu[1].frame    = CGRectMake(screenH-120, 22, 51, 55);
 
@@ -799,7 +785,6 @@ static int APP_STATE = APP_STATE_RUN;
     alGenSources(PITCH_NUM, key_sources);
     
     /*sin波を作成*/
-//    int DATA_NUM=22050;
     int DATA_NUM=88200;         //プチノイズ対策　※高音がだめ
     ALshort data[DATA_NUM];
     for (int i = 0; i < DATA_NUM ; i++)
@@ -814,7 +799,6 @@ static int APP_STATE = APP_STATE_RUN;
     for (int i=0; i < PITCH_NUM; i++) {
 
         alBufferData(key_buffers[i], AL_FORMAT_STEREO16, data, sizeof(data), DATA_NUM);
-//        alBufferData(key_buffers[i], AL_FORMAT_STEREO16, data, sizeof(data), 44100);
         alSourcei( key_sources[i], AL_BUFFER, key_buffers[i]);
         alSourcei( key_sources[i], AL_LOOPING, AL_TRUE );
     }
@@ -1252,8 +1236,6 @@ int translate_key = 0;
 //-------------------------------
 -(void)translate:(int)key: (NSString*)item_name{
     
-    [self.popOver dismissPopoverAnimated:YES];
-
     translate_key = key;
     selected_key = key;
     
